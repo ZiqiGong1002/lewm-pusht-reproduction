@@ -1,3 +1,5 @@
+> **About this fork.** This fork of the official LeWM repository documents an independent reproduction on PushT with a single 12 GB GPU: [results and notes](REPRODUCTION.md) · [中文](REPRODUCTION.zh-CN.md). The model, trained from scratch, scores 90.0% / 85.8% success on 50 / 500 evaluation episodes, against 92.0% / 83.8% for the official checkpoint under the same evaluation, which puts the two on par. Everything below is the upstream README, unchanged.
+
 
 # LeWorldModel
 ### Stable End-to-End Joint-Embedding Predictive Architecture from Pixels
