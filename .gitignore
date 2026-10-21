@@ -1,0 +1,13 @@
+
+# --- added for reproduction fork: never commit data, weights, logs or local envs ---
+.venv/
+__pycache__/
+*.pyc
+outputs/
+*.bak
+*.pt
+*.pth
+*.ckpt
+*.h5
+*.zst
+*.lance/
