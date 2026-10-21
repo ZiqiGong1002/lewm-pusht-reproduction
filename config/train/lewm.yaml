@@ -15,14 +15,15 @@ embed_dim: 192
 history_size: 3
 
 trainer:
-  max_epochs: 100
+  max_epochs: 10
   devices: auto
   accelerator: gpu
   precision: bf16
   gradient_clip_val: 1.0
+  accumulate_grad_batches: 2
 
 loader:
-  batch_size: 128
+  batch_size: 64
   num_workers: ${num_workers}
   persistent_workers: True
   prefetch_factor: 3
