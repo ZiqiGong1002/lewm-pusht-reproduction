@@ -1,11 +1,11 @@
 # 用单张 12GB GPU 复现 LeWM（PushT）
 
-[English](REPRODUCTION.md)
+[English](README.md) · [上游原始 README](UPSTREAM_README.md)
 
 本 fork 记录了对 [LeWorldModel (LeWM)](https://arxiv.org/abs/2603.19312) 在 PushT 任务上的独立复现：用官方代码从零训练，再用官方 `eval.py` 与官方 checkpoint 对比。
 
-- **上游**：[lucas-maes/le-wm](https://github.com/lucas-maes/le-wm)，提交 `8edfeb3`（2026-05-22），代码与历史未改动。
-- **本人的改动**：两处训练配置、`.gitignore`、`README.md` 顶部的一段说明和这两份文档，均为上游之上的单独提交（`git log 8edfeb3..HEAD`）。
+- **上游**：[lucas-maes/le-wm](https://github.com/lucas-maes/le-wm)，提交 `8edfeb3`（2026-05-22），代码与历史未改动，只替换了 README。
+- **本人的改动**：两处训练配置、`.gitignore` 和本 README（官方原 README 保留为 [`UPSTREAM_README.md`](UPSTREAM_README.md)），均为上游之上的单独提交（`git log 8edfeb3..HEAD`）。
 - **不包含**：数据集、模型权重、训练日志。
 
 ## 结论速览
@@ -40,7 +40,7 @@
 ## 复现步骤
 
 ```bash
-# 环境（详见下方上游说明）
+# 环境（详见 UPSTREAM_README.md）
 uv venv --python=3.10 && source .venv/bin/activate
 uv pip install "stable-worldmodel[train,env]" hdf5plugin
 
@@ -71,16 +71,25 @@ python eval.py --config-name=pusht.yaml policy=lewm/weights_epoch_10.pt \
 以下问题均在上游提交 `8edfeb3` 上遇到并在本地绕过，**尚未向上游报告**。只有第 1 项改在了本 fork 的配置里，其余是环境或文档问题，在此记录。
 
 1. **数据配置与发布格式不一致**：`config/train/data/pusht.yaml` 写的是 `pusht_expert_train.lance`，HF 上发布的是 `.h5`。
-2. **解压命令与下载文件不对应**：README 用 `tar --zstd -xvf archive.tar.zst`，实际下载的是单个 `.h5.zst` 文件，需要用 `zstd -d`。
-3. **默认数据目录不一致**：README 写 `$STABLEWM_HOME` 默认为 `~/.stable-wm/`，stable-worldmodel 0.1.1 实际使用 `~/.stable_worldmodel/`。（严格说是本仓库 README 与该库之间的出入。）
+2. **解压命令与下载文件不对应**：上游 README 用 `tar --zstd -xvf archive.tar.zst`，实际下载的是单个 `.h5.zst` 文件，需要用 `zstd -d`。
+3. **默认数据目录不一致**：上游 README 写 `$STABLEWM_HOME` 默认为 `~/.stable-wm/`，stable-worldmodel 0.1.1 实际使用 `~/.stable_worldmodel/`。（严格说是上游 README 与该库之间的出入。）
 4. **缺少可选依赖时报错误导**：没装 `hdf5plugin` 时，加载数据报 "No format detected"，底层的 ImportError 不会显示。
-5. **文档里的 `policy=` 写法不适用于自训权重**：README 让 `policy` 指向 `_object.ckpt`；训练产出的是 `weights_epoch_N.pt`，实际可用的写法是 `policy=lewm/weights_epoch_10.pt`。
+5. **文档里的 `policy=` 写法不适用于自训权重**：上游 README 让 `policy` 指向 `_object.ckpt`；训练产出的是 `weights_epoch_N.pt`，实际可用的写法是 `policy=lewm/weights_epoch_10.pt`。
 6. **checkpoint 下载失败没有明确报错**：HF 下载失败时（例如网络受限），只提示 "no pt file found"；手动下载 `weights.pt` 和 `config.json` 后可正常使用。
 7. **官方权重使用 transformers < 5 的参数命名**：在 transformers 5.x 下加载会报 missing/unexpected keys。本人把 ViT 参数重命名为 5.x 的名称（例如 `query → q_proj`、`intermediate.dense → mlp.fc1`），上表中官方 checkpoint 的数字即用转换后的权重评得。
 
 ## 致谢
 
-模型与训练代码均出自 LeWM 作者。如使用，请引用其论文（BibTeX 见上游 README）。
+模型与训练代码均出自 LeWM 作者（[论文](https://arxiv.org/abs/2603.19312)、[代码](https://github.com/lucas-maes/le-wm)）。如使用，请引用：
+
+```bibtex
+@article{maes_lelidec2026lewm,
+  title={LeWorldModel: Stable End-to-End Joint-Embedding Predictive Architecture from Pixels},
+  author={Maes, Lucas and Le Lidec, Quentin and Scieur, Damien and LeCun, Yann and Balestriero, Randall},
+  journal={arXiv preprint},
+  year={2026}
+}
+```
 
 ## 许可证
 
